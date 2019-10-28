@@ -1,0 +1,4 @@
+# These files are unnecessarry for being pushed to the remote server
+
+/node_modules
+package-lock.json
