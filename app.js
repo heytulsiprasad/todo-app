@@ -15,9 +15,18 @@
 
 const express = require("express");
 const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
+
 const date = require(__dirname +  "/date.js");
 
+mongoose.connect("mongodb://localhost:27017/todoDB", {useNewUrlParser: true});
 const app = express();
+
+const itemsSchema = {
+    name: String
+};
+
+const Item = mongoose.model("Item", itemsSchema);
 
 app.use(bodyParser.urlencoded({
     extended: true
@@ -26,8 +35,21 @@ app.use(bodyParser.urlencoded({
 app.use(express.static("public"));
 app.set('view engine', 'ejs');
 
-let items = ["Buy Food", "Cook Food", "Eat Food"];
-let workItems = [];
+// let items = ["Buy Food", "Cook Food", "Eat Food"];
+// let workItems = [];
+
+const item1 = new Item ({
+    name: "Buy Food"
+});
+
+const item2 = new Item ({
+    name: "Cook Food"
+});
+
+const item3 = new Item ({
+    name: "Eat Food"
+});
+
 
 app.get("/", function (req, res) {
 
