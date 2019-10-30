@@ -56,26 +56,41 @@ const item3 = new Item({
 
 const defaultItems = [item1, item2, item3];
 
-// inserting all three items into the collection in mongo server
-Item.insertMany(defaultItems, function (err) {
-    // to deal with error
-    if (err) {
-        console.log(err);
-    } else {
-        console.log("Successully saved default items to database");
-    }
-});
+
 
 app.get("/", function (req, res) {
 
     Item.find({}, function (err, foundItems) {
         // console.log(foundItems);
+
         let day = date.getDay();
 
-        res.render("list", {
-            listTitle: day,
-            items: foundItems
-        });
+        if (foundItems.length === 0) {
+            // inserting all three items into the collection in mongo server
+            Item.insertMany(defaultItems, function (err) {
+                // to deal with error
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log("Successully saved default items to database");
+                }
+            });
+            // res.redirect("/");
+            res.render("list", {
+                listTitle: day,
+                items: foundItems
+            });
+        } else {
+            res.render("list", {
+                listTitle: day,
+                items: foundItems
+            });
+        }
+
+        // res.render("list", {
+        //     listTitle: day,
+        //     items: foundItems
+        // });
     });
 });
 
@@ -83,13 +98,19 @@ app.post("/", function (req, res) {
 
     let item = req.body.newItem;
 
-    if (req.body.list === "Work") {
-        workItems.push(item);
-        res.redirect("/work")
-    } else {
-        items.push(item);
-        res.redirect("/");
-    }
+    const item4 = new Item ({
+        name: item
+    });
+
+    Item.insertMany([item4], function (err) {
+        if (err) {
+            console.log(err);
+        } else {
+            console.log("added new item to database")
+        }
+    });
+    
+    res.redirect("/");
 
 });
 
