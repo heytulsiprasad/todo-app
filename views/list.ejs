@@ -8,9 +8,9 @@
 
     <div class="box">
         <% items.forEach(function(item) { %>
-        <form>
+        <form method="POST" action="/delete">
             <div class="item">
-                <input type="checkbox">
+                <input type="checkbox" value="<%= item._id %>" onChange="this.form.submit()" name="checkbox">
                 <p><%= item.name %></p>
             </div>
         </form>
