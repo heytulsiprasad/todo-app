@@ -33,6 +33,9 @@ app.use(bodyParser.urlencoded({
 app.use(express.static("public"));
 app.set('view engine', 'ejs');
 
+// importing day name from the date.js module
+var day = date.getDay();
+
 // create a schema for defining the type of inputs
 const itemSchema = {
     name: String
@@ -56,14 +59,19 @@ const item3 = new Item({
 
 const defaultItems = [item1, item2, item3];
 
+const listSchema = {
+    name: String,
+    items: [itemSchema]
+};
+
+const List = mongoose.model("List", listSchema);
+
 
 
 app.get("/", function (req, res) {
 
     Item.find({}, function (err, foundItems) {
         // console.log(foundItems);
-
-        let day = date.getDay();
 
         if (foundItems.length === 0) {
             // inserting all three items into the collection in mongo server
@@ -92,6 +100,31 @@ app.get("/", function (req, res) {
         //     items: foundItems
         // });
     });
+});
+
+app.get("/:customListName", function (req, res) {
+    const customListName = req.params.customListName;
+
+    List.findOne({name: customListName}, function (err, foundItem) {
+        if (!err) {
+            if (!foundItem) {
+                // create a new list
+                const list1 = new List({
+                    name: customListName,
+                    items: defaultItems
+                });
+
+                list1.save();
+                res.redirect("/" + customListName);
+            } else {
+                // show an existing list
+                res.render("list", {
+                    listTitle: foundItem.name,
+                    items: foundItem.items
+                });
+            }
+        } 
+    })
 });
 
 app.post("/", function (req, res) {
