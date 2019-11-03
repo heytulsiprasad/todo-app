@@ -33,9 +33,3 @@ function getDay() {
     return day;
 
 }
-<<<<<<< HEAD
-
-
-// console.log(module.exports);
-=======
->>>>>>> v2.0
