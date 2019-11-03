@@ -16,12 +16,15 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+const _ = require("lodash");
+
+// custom made library
 const date = require(__dirname + "/date.js");
 
 const app = express();
 
 // connecting to the mongo db and creating a database
-mongoose.connect("mongodb://localhost:27017/todoDB", {
+mongoose.connect("mongodb+srv://admin-tulsi:1234567890@cluster0-9ki1f.mongodb.net/todoDB", {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });
@@ -102,7 +105,7 @@ app.get("/", function(req, res) {
 });
 
 app.get("/:customListName", function(req, res) {
-  const customListName = req.params.customListName;
+  const customListName = _.capitalize(req.params.customListName);
 
   List.findOne({ name: customListName }, function(err, foundItem) {
     if (!err) {
@@ -146,8 +149,8 @@ app.post("/", function(req, res) {
   }
 });
 
-// FIXME: When clicked on checkbox on different routes, at a time all the added responses are getting lost
-// FIXME: When checked on the default items box on routes, the listTitle changes to undefined
+// FIXED: When clicked on checkbox on different routes, at a time all the added responses are getting lost
+// FIXED: When checked on the default items box on routes, the listTitle changes to undefined
 
 app.post("/delete", function(req, res) {
   const checkedItemId = req.body.checkbox;
