@@ -2,7 +2,7 @@
 
 module.exports.getDate = getDate;
 
-function getDate() { 
+function getDate() {
 
     const today = new Date();
 
@@ -33,6 +33,9 @@ function getDay() {
     return day;
 
 }
+<<<<<<< HEAD
 
 
 // console.log(module.exports);
+=======
+>>>>>>> v2.0
